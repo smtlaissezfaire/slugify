@@ -19,7 +19,12 @@ module Slug
     end
 
     def generate_slug?
-      slugify_proc.call(@obj) ? true : false
+      !slug_exists? &&
+        slugify_proc.call(@obj) ? true : false
+    end
+
+    def slug_exists?
+      !slug.blank?
     end
 
   private
@@ -67,6 +72,10 @@ module Slug
 
     def scope_value(scope_column)
       @obj.send(scope_column)
+    end
+
+    def slug
+      @obj.send(slug_column)
     end
 
     def slug=(value)

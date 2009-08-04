@@ -276,5 +276,34 @@ describe Slug do
         s.slug.should be_nil
       end
     end
+
+    describe "rerunning slug generation" do
+      it "should not regenerate the slug if the slug already exists" do
+        u = User.new(:slug => "foo", :name => "foo")
+        
+        u.name = "Bar"
+        u.generate_slug
+        
+        u.slug.should == "foo"
+      end
+
+      it "should regenerate the slug if the slug is nil" do
+        u = User.new(:slug => nil, :name => "foo")
+
+        u.name = "Bar"
+        u.generate_slug
+        
+        u.slug.should == "bar"
+      end
+
+      it "should regenerate the slug if the slug is the empty string" do
+        u = User.new(:slug => "", :name => "foo")
+        
+        u.name = "bar"
+        u.generate_slug
+        
+        u.slug.should == "bar"
+      end
+    end
   end
 end
