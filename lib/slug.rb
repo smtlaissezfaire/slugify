@@ -1,14 +1,7 @@
+require File.expand_path(File.dirname(__FILE__) + "/slug/version")
 require File.expand_path(File.dirname(__FILE__) + "/slug/slug_generator")
 
 module Slug
-  module Version
-    MAJOR = 0
-    MINOR = 0
-    TINY  = 1
-
-    STRING = "#{MAJOR}.#{MINOR}.#{TINY}"
-  end
-
   VERSION = Version::STRING
 
   def self.included(other)
