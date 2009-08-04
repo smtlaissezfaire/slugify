@@ -306,5 +306,16 @@ describe Slugify do
         u.slug.should == "bar"
       end
     end
+
+    describe "html escaping" do
+      it "should strip html" do
+        pending do
+          u = User.new
+          u.name = "&lt;p&gt;&lt;i&gt;the silence before bach&lt;/i&gt;&lt;/p&gt;"
+          u.generate_slug
+          u.slug.should == "the-silence-before-bach"
+        end
+      end
+    end
   end
 end
