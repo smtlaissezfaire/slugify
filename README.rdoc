@@ -14,10 +14,10 @@ Generate slugs for your models
   end
 
   Page.create(:title => "Foo")
-  # => #<Page id: 1, title: "foo", slug: "foo">
+  # => #<Page id: 1, title: "Foo", slug: "foo">
 
   Page.create(:title => "Foo")
-  # => #<Page id: 1, title: "foo-0", slug: "foo">
+  # => #<Page id: 1, title: "Foo", slug: "foo-0">
 
 == Using a different slug column
 
