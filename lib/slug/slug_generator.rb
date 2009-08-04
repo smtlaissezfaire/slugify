@@ -9,39 +9,45 @@ module Slug
     end
 
     def generate_slug
-      slug_value = @obj.send(source_slug_column)
+      slug_value = source_slug_value
 
       if !slug_value.blank?
-        slug_value = slug_value.dup
-        slug_value.downcase!
-        slug_value.gsub! /[\'\"\#\$\,\.\!\?\%\@\(\)]+/, ''
-        slug_value.gsub! /\&/,                          'and'
-        slug_value.gsub! /\_/,                          '-'
-        slug_value.gsub! /(\s+)|[\_]/,                  '-'
-        slug_value.gsub! /(\-)+/,                       '-'
-        original_slug_value = slug_value
-
-        counter = 0
-
-        while true
-          if count(:conditions => conditions(slug_value)) == 0
-            self.slug = slug_value
-            break
-          else
-            slug_value = "#{original_slug_value}-#{counter}"
-            counter += 1
-          end
-        end
+        set_unique_slug_value(cleanup_slug(slug_value.dup))
       end
     end
 
-    def conditions(slug_value)
+  private
+
+    def build_conditions(slug_value)
       conditions = { slug_column => slug_value }
       conditions[scope] = scope_value if scope?
       conditions
     end
 
-  private
+    def cleanup_slug(slug_value)
+      slug_value.downcase!
+      slug_value.gsub! /[\'\"\#\$\,\.\!\?\%\@\(\)]+/, ''
+      slug_value.gsub! /\&/,                          'and'
+      slug_value.gsub! /\_/,                          '-'
+      slug_value.gsub! /(\s+)|[\_]/,                  '-'
+      slug_value.gsub! /(\-)+/,                       '-'
+      slug_value
+    end
+
+    def set_unique_slug_value(slug_value)
+      original_slug_value = slug_value
+      counter = 0
+
+      while true
+        if count(:conditions => build_conditions(slug_value)) == 0
+          self.slug = slug_value
+          break
+        else
+          slug_value = "#{original_slug_value}-#{counter}"
+          counter += 1
+        end
+      end
+    end
 
     def scope?
       scope ? true : false
@@ -61,6 +67,10 @@ module Slug
 
     def count(*args)
       @obj.class.count(*args)
+    end
+
+    def source_slug_value
+      @obj.send(source_slug_column)
     end
 
     def source_slug_column
