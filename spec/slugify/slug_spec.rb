@@ -337,6 +337,20 @@ describe Slugify do
           end
         }.should raise_error(Slugify::InvalidSlugOption, "Valid options to slugify are: [:slug_column, :scope, :when]")
       end
+      
+      it "should symbolize keys" do
+        obj = Class.new do
+          def self.before_save(*args); end
+            include Slugify
+
+            slugify "col", "slug_column" => "foo", "scope" => "bar", "when" => "baz"
+        end
+        
+        obj.source_slug_column.should == "col"
+        obj.slug_column.should == "foo"
+        obj.slug_scope.should == "bar"
+        obj.slugify_when.should == "baz"
+      end
     end
   end
 end

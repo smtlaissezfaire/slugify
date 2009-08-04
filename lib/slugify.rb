@@ -16,6 +16,8 @@ module Slugify
 
   module ClassMethods
     def slugify(source_slug_column, options_given={})
+      options_given.symbolize_keys!
+      
       if options_given.keys.any? { |option| !default_slug_options.keys.include?(option) }
         raise InvalidSlugOption, "Valid options to slugify are: [:slug_column, :scope, :when]"
       end
