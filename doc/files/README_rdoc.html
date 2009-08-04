@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>File: README.rdoc [MY_PROJECT_NAME (FIXME)]</title>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+    <link href='../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='file' id='wrapper'>
+      <div class='header'>
+        <div class='name'>README.rdoc</div>
+        <div class='paths'>
+          README.rdoc
+          (<a href="http://github.com/mislav/will_paginate/tree/master/README.rdoc">view online</a>)
+        </div>
+        <div class='last-update'>
+          Last Update:
+          <span class='datetime'>Tue Aug 04 15:09:56 -0400 2009</span>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            <h1>slugify</h1>
+            <p>
+            Generate slugs for your models
+            </p>
+            <h2>Examples</h2>
+            <pre>class Page &lt; ActiveRecord::Base&#x000A;  include Slugify&#x000A;&#x000A;  validates_presence_of :title&#x000A;&#x000A;  slugify :title&#x000A;end&#x000A;&#x000A;Page.create(:title =&gt; &quot;Foo&quot;)&#x000A;# =&gt; #&lt;Page id: 1, title: &quot;Foo&quot;, slug: &quot;foo&quot;&gt;&#x000A;&#x000A;Page.create(:title =&gt; &quot;Foo&quot;)&#x000A;# =&gt; #&lt;Page id: 1, title: &quot;Foo&quot;, slug: &quot;foo-0&quot;&gt;</pre>
+            <h3>Using a different slug column</h3>
+            <pre>slugify :my_column, :slug_column =&gt; :bar</pre>
+            <h3>Scoping:</h3>
+            <pre>slugify :slug_column, :scope =&gt; :col_one&#x000A;slugify :slug_column, :scope =&gt; [:col_one, :col_two]</pre>
+            <h3>Slug generation other than at creation time:</h3>
+            <pre>slugify :my_column, :when =&gt; lambda { |my_record| my_record.published? }</pre>
+          </div>
+          <div id='section'>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>
