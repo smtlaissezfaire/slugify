@@ -6,6 +6,7 @@ describe Slug do
     Page.delete_all
     SlugColumn.delete_all
     Scope.delete_all
+    MultiScope.delete_all
   end
 
   describe ActiveRecord::Base do
@@ -203,6 +204,34 @@ describe Slug do
       first  = create_scope(:title => "one", :some_id => 1)
       second = create_scope(:title => "one", :some_id => 2)
       
+      first.slug.should == "one"
+      second.slug.should == "one"
+    end
+  end
+
+  describe "scoped by two columns" do
+    class MultiScope < ActiveRecord::Base
+      slugify :title, :scope => [:scope_one, :scope_two]
+    end
+
+    def create_scope(attrs={})
+      s = MultiScope.new(attrs)
+      s.save!
+      s
+    end
+
+    it "show generate a unique identifier in the same scopes" do
+      first  = create_scope(:title => "one", :scope_one => 1, :scope_two => 1)
+      second = create_scope(:title => "one", :scope_one => 1, :scope_two => 1)
+      
+      first.slug.should == "one"
+      second.slug.should == "one-0"
+    end
+
+    it "should use the same identifier in different scopes" do
+      first  = create_scope(:title => "one", :scope_one => 1, :scope_two => 1)
+      second = create_scope(:title => "one", :scope_one => 1, :scope_two => 2)
+
       first.slug.should == "one"
       second.slug.should == "one"
     end

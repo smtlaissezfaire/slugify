@@ -26,8 +26,15 @@ ActiveRecord::Schema.define do
   end
 
   create_table :scopes do |t|
+    t.string  :title
+    t.string  :slug
+    t.integer :some_id
+  end
+  
+  create_table :multi_scopes do |t|
     t.string :title
-    t.string :some_id
     t.string :slug
+    t.string :scope_one
+    t.string :scope_two
   end
 end

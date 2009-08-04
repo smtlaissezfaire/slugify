@@ -12,6 +12,7 @@ module Slug
   module ClassMethods
     def slugify(source_slug_column, options_given={})
       options = default_slug_options.merge(options_given)
+      options[:scope] = [options[:scope]] unless options[:scope].respond_to?(:[])
       
       @source_slug_column = source_slug_column
       @slug_column        = options[:slug_column]
@@ -27,7 +28,7 @@ module Slug
     def default_slug_options
       {
         :slug_column => :slug,
-        :scope       => nil
+        :scope       => []
       }
     end
   end

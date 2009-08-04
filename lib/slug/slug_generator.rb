@@ -20,7 +20,9 @@ module Slug
 
     def build_conditions(slug_value)
       conditions = { slug_column => slug_value }
-      conditions[scope] = scope_value if scope?
+      scopes.each do |column_name|
+        conditions[column_name] = scope_value(column_name)
+      end
       conditions
     end
 
@@ -53,12 +55,12 @@ module Slug
       scope ? true : false
     end
 
-    def scope
+    def scopes
       @obj.class.slug_scope
     end
 
-    def scope_value
-      @obj.send scope
+    def scope_value(scope_column)
+      @obj.send(scope_column)
     end
 
     def slug=(value)
