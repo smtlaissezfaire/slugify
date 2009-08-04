@@ -46,6 +46,10 @@ end
 
 Spec::Runner.configure do |config|
   config.before :each do
+    cleanup_db
+  end
+
+  def cleanup_db
     User.delete_all
     Page.delete_all
     SlugColumn.delete_all
