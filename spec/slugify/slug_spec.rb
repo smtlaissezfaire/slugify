@@ -335,7 +335,7 @@ describe Slugify do
             include Slugify
             slugify :foo, :source_column => :bar
           end
-        }.should raise_error(Slugify::InvalidSlugOption, "Valid options to slugify are: [:slug_column, :scope, :when]")
+        }.should raise_error(ArgumentError, "Unknown key(s): source_column")
       end
       
       it "should symbolize keys" do
