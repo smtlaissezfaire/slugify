@@ -8,7 +8,7 @@ Spec::Rake::SpecTask.new do |t|
 end
 
 desc "Create the html specdoc"
-Spec::Rake::SpecTask.new(:specdoc => :create_doc_directory) do |t|
+Spec::Rake::SpecTask.new(:specdoc) do |t|
   t.spec_opts = ["--format", "html:doc/specdoc.html"]
 end
 
@@ -18,3 +18,4 @@ Spec::Rake::SpecTask.new(:rcov) do |t|
   t.rcov_opts = ['--exclude', 'spec']
   t.rcov_dir = "doc/rcov"
 end
+
