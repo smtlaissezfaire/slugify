@@ -1,0 +1,33 @@
+
+= slug
+
+Generate slugs for your models
+
+== Examples
+
+  class Page < ActiveRecord::Base
+    include Slug
+
+    validates_presence_of :title
+    
+    slugify :title
+  end
+
+  Page.create(:title => "Foo")
+  # => #<Page id: 1, title: "foo", slug: "foo">
+
+  Page.create(:title => "Foo")
+  # => #<Page id: 1, title: "foo-0", slug: "foo">
+
+== Using a different slug column
+
+  slugify :my_column, :slug_column => :bar
+
+=== Scoping:
+
+  slugify :slug_column, :scope => :col_one
+  slugify :slug_column, :scope => [:col_one, :col_two]
+
+=== Slug generation other than at creation time:
+
+  slugify :my_column, :when => lambda { |my_record| my_record.published? }
