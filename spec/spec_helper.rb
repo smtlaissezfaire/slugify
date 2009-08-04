@@ -2,7 +2,6 @@ require 'rubygems'
 require 'activerecord'
 
 require File.expand_path(File.dirname(__FILE__) + "/../lib/slug")
-require File.expand_path(File.dirname(__FILE__) + "/../init")
 
 require 'sqlite3'
 

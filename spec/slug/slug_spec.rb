@@ -2,12 +2,14 @@ require File.expand_path(File.dirname(__FILE__) + "/../spec_helper")
 
 describe Slug do
   describe ActiveRecord::Base do
-    it "should respond_to? :slugify" do
-      ActiveRecord::Base.should respond_to(:slugify)
+    it "should not automatically mix in the module" do
+      ActiveRecord::Base.included_modules.should_not include(Slug)
     end
   end
 
   class User < ActiveRecord::Base
+    include Slug
+
     validates_presence_of :name
     slugify :name
   end
@@ -36,6 +38,8 @@ describe Slug do
     end
 
     class Page < ActiveRecord::Base
+      include Slug
+
       slugify :title
     end
 
@@ -46,6 +50,8 @@ describe Slug do
     end
 
     class SlugColumn < ActiveRecord::Base
+      include Slug
+
       slugify :foo, :slug_column => "url_slug"
     end
 
@@ -151,6 +157,7 @@ describe Slug do
 
   describe "scopes" do
     class Scope < ActiveRecord::Base
+      include Slug
       slugify :title, :scope => :some_id
     end
 
@@ -179,6 +186,7 @@ describe Slug do
 
   describe "scoped by two columns" do
     class MultiScope < ActiveRecord::Base
+      include Slug
       slugify :title, :scope => [:scope_one, :scope_two]
     end
 
@@ -230,6 +238,8 @@ describe Slug do
 
     describe "with a :when lambda" do
       class SlugWithProc < ActiveRecord::Base
+        include Slug
+
         slugify :title, :when => lambda { |obj| obj.a_value }
    
         attr_accessor :a_value
