@@ -10,16 +10,16 @@ module Slug
   module ClassMethods
     def slugify(source_slug_column, options_given={})
       options = default_slug_options.merge(options_given)
-
+      
       @source_slug_column = source_slug_column
       @slug_column        = options[:slug_column]
     end
-
+    
     attr_reader :source_slug_column
     attr_reader :slug_column
-
+    
   private
-
+    
     def default_slug_options
       {
         :slug_column => :slug,
@@ -28,9 +28,17 @@ module Slug
     end
   end
 
-  module InstanceMethods
+  class SlugGenerator
+    def self.generate_slug(obj)
+      new(obj).generate_slug
+    end
+
+    def initialize(obj)
+      @obj = obj
+    end
+
     def generate_slug
-      slug_value = send(source_slug_column)
+      slug_value = @obj.send(source_slug_column)
 
       if !slug_value.blank?
         slug_value = slug_value.dup
@@ -45,8 +53,8 @@ module Slug
         counter = 0
 
         while true
-          if self.class.count(:conditions => ["#{slug_column} = ?", slug_value]) == 0
-            send("#{slug_column}=", slug_value)
+          if count(:conditions => ["#{slug_column} = ?", slug_value]) == 0
+            self.slug = slug_value
             break
           else
             slug_value = "#{original_slug_value}-#{counter}"
@@ -58,12 +66,26 @@ module Slug
 
   private
 
+    def slug=(value)
+      @obj.send("#{slug_column}=", value)
+    end
+
+    def count(*args)
+      @obj.class.count(*args)
+    end
+
     def source_slug_column
-      self.class.source_slug_column
+      @obj.class.source_slug_column
     end
 
     def slug_column
-      self.class.slug_column
+      @obj.class.slug_column
+    end
+  end
+
+  module InstanceMethods
+    def generate_slug
+      SlugGenerator.generate_slug(self)
     end
   end
 end
