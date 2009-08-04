@@ -1,5 +1,8 @@
 module Slugify
   class SlugGenerator
+    CHAR_ENCODING_TRANSLATION_TO   = 'ascii//ignore//translit'
+    CHAR_ENCODING_TRANSLATION_FROM = 'utf-8'
+
     def self.generate_slug(obj)
       new(obj).generate_slug
     end
@@ -10,7 +13,7 @@ module Slugify
 
     def generate_slug
       if generate_slug?
-        slug_value = source_slug_value
+        slug_value = escaped_slug_value
    
         if !slug_value.blank?
           set_unique_slug_value(cleanup_slug(slug_value.dup))
@@ -84,6 +87,14 @@ module Slugify
 
     def count(*args)
       @obj.class.count(*args)
+    end
+
+    def escaped_slug_value
+      if val = source_slug_value
+        Iconv.iconv(CHAR_ENCODING_TRANSLATION_TO, CHAR_ENCODING_TRANSLATION_FROM, val).to_s
+      else
+        nil
+      end
     end
 
     def source_slug_value

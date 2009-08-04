@@ -317,5 +317,13 @@ describe Slugify do
         end
       end
     end
+
+    describe "utf8-chars" do
+      it "should replace them" do
+        u = User.new(:name => "cinqüenta")
+        u.generate_slug
+        u.slug.should == "cinquenta"
+      end
+    end
   end
 end
