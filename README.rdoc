@@ -19,7 +19,7 @@ Generate slugs for your models
   Page.create(:title => "Foo")
   # => #<Page id: 1, title: "Foo", slug: "foo-0">
 
-== Using a different slug column
+=== Using a different slug column
 
   slugify :my_column, :slug_column => :bar
 
