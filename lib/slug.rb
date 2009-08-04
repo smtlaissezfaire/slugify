@@ -15,17 +15,19 @@ module Slug
       
       @source_slug_column = source_slug_column
       @slug_column        = options[:slug_column]
+      @slug_scope         = options[:scope]
     end
     
     attr_reader :source_slug_column
     attr_reader :slug_column
+    attr_reader :slug_scope
     
   private
     
     def default_slug_options
       {
         :slug_column => :slug,
-        :scope       => []
+        :scope       => nil
       }
     end
   end

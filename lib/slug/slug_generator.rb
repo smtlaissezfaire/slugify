@@ -24,7 +24,7 @@ module Slug
         counter = 0
 
         while true
-          if count(:conditions => ["#{slug_column} = ?", slug_value]) == 0
+          if count(:conditions => conditions(slug_value)) == 0
             self.slug = slug_value
             break
           else
@@ -35,7 +35,25 @@ module Slug
       end
     end
 
+    def conditions(slug_value)
+      conditions = { slug_column => slug_value }
+      conditions[scope] = scope_value if scope?
+      conditions
+    end
+
   private
+
+    def scope?
+      scope ? true : false
+    end
+
+    def scope
+      @obj.class.slug_scope
+    end
+
+    def scope_value
+      @obj.send scope
+    end
 
     def slug=(value)
       @obj.send("#{slug_column}=", value)

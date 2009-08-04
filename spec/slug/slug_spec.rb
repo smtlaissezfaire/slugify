@@ -200,13 +200,11 @@ describe Slug do
     end
 
     it "should allow a slug to be scoped (so that the same slug can be used in different contexts" do
-      pending do
-        first  = create_scope(:title => "one", :some_id => 1)
-        second = create_scope(:title => "one", :some_id => 2)
-    
-        first.slug.should == "one"
-        second.slug.should == "one"
-      end
+      first  = create_scope(:title => "one", :some_id => 1)
+      second = create_scope(:title => "one", :some_id => 2)
+      
+      first.slug.should == "one"
+      second.slug.should == "one"
     end
   end
 end
