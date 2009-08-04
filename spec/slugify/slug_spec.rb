@@ -325,5 +325,18 @@ describe Slugify do
         u.slug.should == "cinquenta"
       end
     end
+    
+    describe "passing invalid options" do
+      it "should raise an error, displaying the valid keys" do
+        lambda {
+          Class.new do
+            def self.before_save(*args); end
+            
+            include Slugify
+            slugify :foo, :source_column => :bar
+          end
+        }.should raise_error(Slugify::InvalidSlugOption, "Valid options to slugify are: [:slug_column, :scope, :when]")
+      end
+    end
   end
 end

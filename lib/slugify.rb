@@ -3,7 +3,9 @@ require File.expand_path(File.dirname(__FILE__) + "/slugify/slug_generator")
 
 module Slugify
   VERSION = Version::STRING
-
+  
+  class InvalidSlugOption < StandardError; end
+  
   def self.included(other)
     other.extend ClassMethods
     other.class_eval do
@@ -14,6 +16,10 @@ module Slugify
 
   module ClassMethods
     def slugify(source_slug_column, options_given={})
+      if options_given.keys.any? { |option| !default_slug_options.keys.include?(option) }
+        raise InvalidSlugOption, "Valid options to slugify are: [:slug_column, :scope, :when]"
+      end
+      
       options = default_slug_options.merge(options_given)
       options[:scope] = [options[:scope]] unless options[:scope].respond_to?(:[])
       
