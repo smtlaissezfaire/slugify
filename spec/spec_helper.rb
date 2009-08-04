@@ -37,4 +37,9 @@ ActiveRecord::Schema.define do
     t.string :scope_one
     t.string :scope_two
   end
+  
+  create_table :slug_with_procs do |t|
+    t.string :title
+    t.string :slug
+  end
 end

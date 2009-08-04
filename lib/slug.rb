@@ -4,7 +4,7 @@ module Slug
   def self.included(other)
     other.extend ClassMethods
     other.class_eval do
-      before_create :generate_slug
+      before_save :generate_slug
       include InstanceMethods
     end
   end
@@ -17,18 +17,21 @@ module Slug
       @source_slug_column = source_slug_column
       @slug_column        = options[:slug_column]
       @slug_scope         = options[:scope]
+      @slugify_when       = options[:when]
     end
     
     attr_reader :source_slug_column
     attr_reader :slug_column
     attr_reader :slug_scope
+    attr_reader :slugify_when
     
   private
     
     def default_slug_options
       {
-        :slug_column => :slug,
-        :scope       => []
+        :slug_column  => :slug,
+        :scope        => [],
+        :when         => lambda { |obj| obj.new_record? }
       }
     end
   end

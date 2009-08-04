@@ -7,6 +7,7 @@ describe Slug do
     SlugColumn.delete_all
     Scope.delete_all
     MultiScope.delete_all
+    SlugWithProc.delete_all
   end
 
   describe ActiveRecord::Base do
@@ -61,30 +62,6 @@ describe Slug do
       s = SlugColumn.new(:foo => "bar")
       s.generate_slug
       s.url_slug.should == "bar"
-    end
-  end
-
-  describe "validations" do
-    it "should generate the slug on creation" do
-      u = create_user(:name => "scott")
-      u.slug.should == "scott"
-    end
-
-    it "should not generate the slug if not valid" do
-      u = User.new(:name => "")
-      u.should_not be_valid
-
-      u.should_not_receive(:generate_slug)
-      u.valid?
-    end
-
-    it "should not regenerate the slug on update" do
-      u = create_user(:name => "scott")
-      u.save!
-      u.name = "foo"
-      u.save!
-
-      u.slug.should == "scott"
     end
   end
 
@@ -234,6 +211,70 @@ describe Slug do
 
       first.slug.should == "one"
       second.slug.should == "one"
+    end
+  end
+
+  describe "validations" do
+    it "should generate the slug on creation" do
+      u = create_user(:name => "scott")
+      u.slug.should == "scott"
+    end
+
+    it "should not generate the slug if not valid" do
+      u = User.new(:name => "")
+      u.should_not be_valid
+
+      u.should_not_receive(:generate_slug)
+      u.valid?
+    end
+
+    it "should not regenerate the slug on update" do
+      u = create_user(:name => "scott")
+      u.save!
+      u.name = "foo"
+      u.save!
+
+      u.slug.should == "scott"
+    end
+
+    describe "with a :when lambda" do
+      class SlugWithProc < ActiveRecord::Base
+        slugify :title, :when => lambda { |obj| obj.a_value }
+   
+        attr_accessor :a_value
+      end
+   
+      it "should allow slug generation when the proc is true" do
+        s = SlugWithProc.new(:title => "foo")
+        s.a_value = true
+
+        s.generate_slug
+        s.slug.should == "foo"
+      end
+
+      it "should not allow slug generation when the slug is false" do
+        s = SlugWithProc.new(:title => "foo")
+        s.a_value = false
+
+        s.generate_slug
+        s.slug.should be_nil
+      end
+
+      it "should allow slug generation when the value is truthy" do
+        s = SlugWithProc.new(:title => "foo")
+        s.a_value = "a-truthy-value"
+
+        s.generate_slug
+        s.slug.should == "foo"
+      end
+
+      it "should not allow slug generation when the value is falsy (i.e. nil)" do
+        s = SlugWithProc.new(:title => "foo")
+        s.a_value = nil
+
+        s.generate_slug
+        s.slug.should be_nil
+      end
     end
   end
 end

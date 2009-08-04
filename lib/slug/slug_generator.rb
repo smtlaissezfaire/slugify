@@ -9,11 +9,17 @@ module Slug
     end
 
     def generate_slug
-      slug_value = source_slug_value
-
-      if !slug_value.blank?
-        set_unique_slug_value(cleanup_slug(slug_value.dup))
+      if generate_slug?
+        slug_value = source_slug_value
+   
+        if !slug_value.blank?
+          set_unique_slug_value(cleanup_slug(slug_value.dup))
+        end
       end
+    end
+
+    def generate_slug?
+      slugify_proc.call(@obj) ? true : false
     end
 
   private
@@ -81,6 +87,10 @@ module Slug
 
     def slug_column
       @obj.class.slug_column
+    end
+
+    def slugify_proc
+      @obj.class.slugify_when
     end
   end
 end
