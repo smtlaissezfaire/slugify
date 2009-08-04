@@ -43,3 +43,14 @@ ActiveRecord::Schema.define do
     t.string :slug
   end
 end
+
+Spec::Runner.configure do |config|
+  config.before :each do
+    User.delete_all
+    Page.delete_all
+    SlugColumn.delete_all
+    Scope.delete_all
+    MultiScope.delete_all
+    SlugWithProc.delete_all
+  end
+end

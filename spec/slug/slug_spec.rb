@@ -1,15 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + "/../spec_helper")
 
 describe Slug do
-  before do
-    User.delete_all
-    Page.delete_all
-    SlugColumn.delete_all
-    Scope.delete_all
-    MultiScope.delete_all
-    SlugWithProc.delete_all
-  end
-
   describe ActiveRecord::Base do
     it "should respond_to? :slugify" do
       ActiveRecord::Base.should respond_to(:slugify)
