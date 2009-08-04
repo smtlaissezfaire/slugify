@@ -1,4 +1,4 @@
-module Slug
+module Slugify
   module Version
     MAJOR = 0
     MINOR = 0

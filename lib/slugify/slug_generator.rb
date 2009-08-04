@@ -1,4 +1,4 @@
-module Slug
+module Slugify
   class SlugGenerator
     def self.generate_slug(obj)
       new(obj).generate_slug

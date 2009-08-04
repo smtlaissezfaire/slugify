@@ -1,12 +1,12 @@
 
-= slug
+= slugify
 
 Generate slugs for your models
 
 == Examples
 
   class Page < ActiveRecord::Base
-    include Slug
+    include Slugify
 
     validates_presence_of :title
     

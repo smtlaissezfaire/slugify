@@ -1,7 +1,7 @@
-require File.expand_path(File.dirname(__FILE__) + "/slug/version")
-require File.expand_path(File.dirname(__FILE__) + "/slug/slug_generator")
+require File.expand_path(File.dirname(__FILE__) + "/slugify/version")
+require File.expand_path(File.dirname(__FILE__) + "/slugify/slug_generator")
 
-module Slug
+module Slugify
   VERSION = Version::STRING
 
   def self.included(other)
@@ -41,7 +41,7 @@ module Slug
 
   module InstanceMethods
     def generate_slug
-      SlugGenerator.generate_slug(self)
+      Slugify::SlugGenerator.generate_slug(self)
     end
   end
 end
