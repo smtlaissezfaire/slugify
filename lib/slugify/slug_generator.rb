@@ -14,7 +14,7 @@ module Slugify
       str
     end
 
-    def self.generate_slug(obj)
+    def self.generate(obj)
       new(obj).generate_slug
     end
 

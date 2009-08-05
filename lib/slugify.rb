@@ -45,7 +45,7 @@ module Slugify
 
   module InstanceMethods
     def generate_slug
-      Slugify::SlugGenerator.generate_slug(self)
+      Slugify::SlugGenerator.generate(self)
     end
   end
 end
