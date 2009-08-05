@@ -227,15 +227,6 @@ describe Slugify do
       u.valid?
     end
 
-    it "should not regenerate the slug on update" do
-      u = create_user(:name => "scott")
-      u.save!
-      u.name = "foo"
-      u.save!
-
-      u.slug.should == "scott"
-    end
-
     describe "with a :when lambda" do
       class SlugWithProc < ActiveRecord::Base
         include Slugify
@@ -279,6 +270,15 @@ describe Slugify do
     end
 
     describe "rerunning slug generation" do
+      it "should not regenerate the slug on update (by default)" do
+        u = create_user(:name => "scott")
+        u.save!
+        u.name = "foo"
+        u.save!
+
+        u.slug.should == "scott"
+      end
+
       it "should not regenerate the slug if the slug already exists" do
         u = User.new(:slug => "foo", :name => "foo")
         
