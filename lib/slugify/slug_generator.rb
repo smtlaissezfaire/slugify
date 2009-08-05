@@ -7,6 +7,8 @@ module Slugify
       def generate_slug(str)
         str = Iconv.iconv(CHAR_ENCODING_TRANSLATION_TO, CHAR_ENCODING_TRANSLATION_FROM, str).to_s
         str.downcase!
+        
+        str.gsub! /<.*?>/,                       ''   # strip HTML
         str.gsub! /[\'\"\#\$\,\.\!\?\%\@\(\)]+/, ''
         str.gsub! /\&/,                          'and'
         str.gsub! /\_/,                          '-'

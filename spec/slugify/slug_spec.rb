@@ -300,13 +300,20 @@ describe Slugify do
     end
 
     describe "html escaping" do
+      before do
+        @u = User.new
+      end
+      
       it "should strip html" do
-        pending do
-          u = User.new
-          u.name = "&lt;p&gt;&lt;i&gt;the silence before bach&lt;/i&gt;&lt;/p&gt;"
-          u.generate_slug
-          u.slug.should == "the-silence-before-bach"
-        end
+        @u.name = "<i>the silence before bach</i>"
+        @u.generate_slug
+        @u.slug.should == "the-silence-before-bach"
+      end
+      
+      it "should strip recursively, but keep text inside the tags" do
+        @u.name = "<one>foo<two>bar</two></one>"
+        @u.generate_slug
+        @u.slug.should == "foobar"
       end
     end
 
