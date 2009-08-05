@@ -2,6 +2,17 @@ module Slugify
   class SlugGenerator
     CHAR_ENCODING_TRANSLATION_TO   = 'ascii//ignore//translit'
     CHAR_ENCODING_TRANSLATION_FROM = 'utf-8'
+    
+    def self.clean(str)
+      str = Iconv.iconv(CHAR_ENCODING_TRANSLATION_TO, CHAR_ENCODING_TRANSLATION_FROM, str).to_s
+      str.downcase!
+      str.gsub! /[\'\"\#\$\,\.\!\?\%\@\(\)]+/, ''
+      str.gsub! /\&/,                          'and'
+      str.gsub! /\_/,                          '-'
+      str.gsub! /(\s+)|[\_]/,                  '-'
+      str.gsub! /(\-)+/,                       '-'
+      str
+    end
 
     def self.generate_slug(obj)
       new(obj).generate_slug
@@ -40,15 +51,8 @@ module Slugify
       conditions
     end
 
-    def cleanup_slug(slug_value)
-      slug_value = Iconv.iconv(CHAR_ENCODING_TRANSLATION_TO, CHAR_ENCODING_TRANSLATION_FROM, slug_value).to_s
-      slug_value.downcase!
-      slug_value.gsub! /[\'\"\#\$\,\.\!\?\%\@\(\)]+/, ''
-      slug_value.gsub! /\&/,                          'and'
-      slug_value.gsub! /\_/,                          '-'
-      slug_value.gsub! /(\s+)|[\_]/,                  '-'
-      slug_value.gsub! /(\-)+/,                       '-'
-      slug_value
+    def cleanup_slug(str)
+      self.class.clean(str)
     end
 
     def set_unique_slug_value(slug_value)
