@@ -41,6 +41,10 @@ ActiveRecord::Schema.define do
     t.string :title
     t.string :slug
   end
+  
+  create_table :unused_slugify_classes do |t|
+    t.timestamps
+  end
 end
 
 Spec::Runner.configure do |config|

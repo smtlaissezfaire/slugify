@@ -37,7 +37,7 @@ module Slugify
     end
 
     def generate_slug?
-      slugify_proc.call(@obj) ? true : false
+      slugify_proc && slugify_proc.call(@obj) ? true : false
     end
 
     def slug_exists?
