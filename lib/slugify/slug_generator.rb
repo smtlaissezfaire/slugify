@@ -3,7 +3,7 @@ module Slugify
     CHAR_ENCODING_TRANSLATION_TO   = 'ascii//ignore//translit'
     CHAR_ENCODING_TRANSLATION_FROM = 'utf-8'
     
-    def self.clean(str)
+    def self.generate_slug(str)
       str = Iconv.iconv(CHAR_ENCODING_TRANSLATION_TO, CHAR_ENCODING_TRANSLATION_FROM, str).to_s
       str.downcase!
       str.gsub! /[\'\"\#\$\,\.\!\?\%\@\(\)]+/, ''
@@ -52,7 +52,7 @@ module Slugify
     end
 
     def cleanup_slug(str)
-      self.class.clean(str)
+      self.class.generate_slug(str)
     end
 
     def set_unique_slug_value(slug_value)
