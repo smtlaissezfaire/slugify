@@ -268,7 +268,7 @@ describe Slugify do
         s.slug.should be_nil
       end
     end
-
+    
     describe "rerunning slug generation" do
       it "should not regenerate the slug on update (by default)" do
         u = create_user(:name => "scott")
@@ -278,32 +278,15 @@ describe Slugify do
 
         u.slug.should == "scott"
       end
-
-      it "should not regenerate the slug if the slug already exists" do
-        u = User.new(:slug => "foo", :name => "foo")
+      
+      it "should regenerate the slug if the :when proc specifies it" do
+        obj = SlugWithProc.new(:title => "foo")
+        obj.a_value = true
+        obj.save!
         
-        u.name = "Bar"
-        u.generate_slug
-        
-        u.slug.should == "foo"
-      end
-
-      it "should regenerate the slug if the slug is nil" do
-        u = User.new(:slug => nil, :name => "foo")
-
-        u.name = "Bar"
-        u.generate_slug
-        
-        u.slug.should == "bar"
-      end
-
-      it "should regenerate the slug if the slug is the empty string" do
-        u = User.new(:slug => "", :name => "foo")
-        
-        u.name = "bar"
-        u.generate_slug
-        
-        u.slug.should == "bar"
+        obj.title = "bar"
+        obj.save!
+        obj.slug.should == "bar"
       end
     end
 
