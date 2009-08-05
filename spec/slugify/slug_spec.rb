@@ -288,6 +288,15 @@ describe Slugify do
         obj.save!
         obj.slug.should == "bar"
       end
+
+      it "should only compare against other table entries when regenerating a slug" do
+        obj = SlugWithProc.new(:title => "foo")
+        obj.a_value = true
+        obj.save!
+
+        obj.save!
+        obj.slug.should == "foo"
+      end
     end
 
     describe "html escaping" do

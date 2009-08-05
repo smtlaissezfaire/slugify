@@ -52,6 +52,11 @@ module Slugify
         values  << scope_value(column_name)
       end
 
+      if @obj.id
+        sql_str << " AND id != ?"
+        values  << @obj.id
+      end
+
       [sql_str, *values]
     end
 
