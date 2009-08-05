@@ -45,11 +45,14 @@ module Slugify
   private
 
     def build_conditions(slug_value)
-      conditions = { slug_column => slug_value }
+      sql_str, values = "#{slug_column} = ?", [slug_value]
+
       scopes.each do |column_name|
-        conditions[column_name] = scope_value(column_name)
+        sql_str << " AND #{column_name} = ?"
+        values  << scope_value(column_name)
       end
-      conditions
+
+      [sql_str, *values]
     end
 
     def cleanup_slug(str)
