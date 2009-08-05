@@ -7,13 +7,6 @@ describe Slugify do
     end
   end
 
-  class User < ActiveRecord::Base
-    include Slugify
-
-    validates_presence_of :name
-    slugify :name
-  end
-
   def new_user(attributes = {})
     User.new(attributes)
   end
@@ -37,22 +30,10 @@ describe Slugify do
       u.slug.should == "bar"
     end
 
-    class Page < ActiveRecord::Base
-      include Slugify
-
-      slugify :title
-    end
-
     it "should allow a different name" do
       p = Page.new(:title => "foo")
       p.generate_slug
       p.slug.should == "foo"
-    end
-
-    class SlugColumn < ActiveRecord::Base
-      include Slugify
-
-      slugify :foo, :slug_column => "url_slug"
     end
 
     it "should allow a different slug column" do
@@ -156,11 +137,6 @@ describe Slugify do
   end
 
   describe "scopes" do
-    class Scope < ActiveRecord::Base
-      include Slugify
-      slugify :title, :scope => :some_id
-    end
-
     def create_scope(attrs={})
       s = Scope.new(attrs)
       s.save!
@@ -185,11 +161,6 @@ describe Slugify do
   end
 
   describe "scoped by two columns" do
-    class MultiScope < ActiveRecord::Base
-      include Slugify
-      slugify :title, :scope => [:scope_one, :scope_two]
-    end
-
     def create_scope(attrs={})
       s = MultiScope.new(attrs)
       s.save!
@@ -228,14 +199,6 @@ describe Slugify do
     end
 
     describe "with a :when lambda" do
-      class SlugWithProc < ActiveRecord::Base
-        include Slugify
-
-        slugify :title, :when => lambda { |obj| obj.a_value }
-   
-        attr_accessor :a_value
-      end
-   
       it "should allow slug generation when the proc is true" do
         s = SlugWithProc.new(:title => "foo")
         s.a_value = true

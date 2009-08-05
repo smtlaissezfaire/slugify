@@ -2,6 +2,7 @@ require 'rubygems'
 require 'activerecord'
 
 require File.expand_path(File.dirname(__FILE__) + "/../lib/slugify")
+require File.expand_path(File.dirname(__FILE__) + "/fixtures")
 
 require 'sqlite3'
 
