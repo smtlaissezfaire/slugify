@@ -3,19 +3,21 @@ module Slugify
     CHAR_ENCODING_TRANSLATION_TO   = 'ascii//ignore//translit'
     CHAR_ENCODING_TRANSLATION_FROM = 'utf-8'
     
-    def self.generate_slug(str)
-      str = Iconv.iconv(CHAR_ENCODING_TRANSLATION_TO, CHAR_ENCODING_TRANSLATION_FROM, str).to_s
-      str.downcase!
-      str.gsub! /[\'\"\#\$\,\.\!\?\%\@\(\)]+/, ''
-      str.gsub! /\&/,                          'and'
-      str.gsub! /\_/,                          '-'
-      str.gsub! /(\s+)|[\_]/,                  '-'
-      str.gsub! /(\-)+/,                       '-'
-      str
-    end
+    class << self
+      def generate_slug(str)
+        str = Iconv.iconv(CHAR_ENCODING_TRANSLATION_TO, CHAR_ENCODING_TRANSLATION_FROM, str).to_s
+        str.downcase!
+        str.gsub! /[\'\"\#\$\,\.\!\?\%\@\(\)]+/, ''
+        str.gsub! /\&/,                          'and'
+        str.gsub! /\_/,                          '-'
+        str.gsub! /(\s+)|[\_]/,                  '-'
+        str.gsub! /(\-)+/,                       '-'
+        str
+      end
 
-    def self.generate(obj)
-      new(obj).generate_slug
+      def generate(obj)
+        new(obj).generate_slug
+      end
     end
 
     def initialize(obj)
