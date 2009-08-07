@@ -110,6 +110,12 @@ describe Slugify do
       u.generate_slug
       u.slug.should == "one-two"
     end
+    
+    it "should replace a '/' with a dash" do
+      u = new_user(:name => "one/two")
+      u.generate_slug
+      u.slug.should == "one-two"
+    end
   end
 
   it "should not generate a slug if the source column is nil" do

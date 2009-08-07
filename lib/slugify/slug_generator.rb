@@ -12,7 +12,7 @@ module Slugify
         str.gsub! /[\'\"\#\$\,\.\!\?\%\@\(\)]+/, ''
         str.gsub! /\&/,                          'and'
         str.gsub! /\_/,                          '-'
-        str.gsub! /(\s+)|[\_]/,                  '-'
+        str.gsub! /[\W^-_]+/,                    '-'
         str.gsub! /(\-)+/,                       '-'
         str
       end
