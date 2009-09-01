@@ -2,6 +2,7 @@ module Slugify
   class SlugGenerator
     CHAR_ENCODING_TRANSLATION_TO   = 'ascii//ignore//translit'
     CHAR_ENCODING_TRANSLATION_FROM = 'utf-8'
+    DEFAULT_SLUG_COLUMN            = "default"
     
     class << self
       def generate_slug(str)
@@ -31,7 +32,13 @@ module Slugify
         slug_value = source_slug_value
    
         if !slug_value.blank?
-          set_unique_slug_value(cleanup_slug(slug_value.dup))
+          escaped_string = cleanup_slug(slug_value.dup)
+          
+          if !escaped_string.blank?
+            set_unique_slug_value(escaped_string)
+          else
+            set_unique_slug_value(DEFAULT_SLUG_COLUMN)
+          end
         end
       end
     end

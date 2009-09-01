@@ -128,13 +128,28 @@ describe Slugify do
     u = new_user(:name => "")
     u.generate_slug.should be_nil
   end
+  
+  it "should generate a slug when the source column is not empty, but has only escaped chars" do
+    u = new_user(:name => "...")
+    u.generate_slug
+    u.slug.should == "default"
+  end
+  
+  it "should generate a slug when the source column is not empty, but has only escaped chars" do
+    create_user(:name => "...")
+    
+    u = new_user(:name => "...")
+    u.generate_slug
+    u.slug.should == "default-0"
+  end
+  
 
   describe "generating the slug when one already exists" do
     it "should create a slug with -0 appended on to it" do
       create_user(:name => "Scott Taylor")
       create_user(:name => "Scott Taylor").slug.should == "scott-taylor-0"
     end
-
+    
     it "should create a slug with -1 appended to it when it is the third slug" do
       create_user(:name => "Scott Taylor")
       create_user(:name => "Scott Taylor")
