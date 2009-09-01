@@ -46,83 +46,119 @@
             <h2>Methods</h2>
             <h3>public class</h3>
             <ol>
+              <li><a href="#M000005">generate</a></li>
               <li><a href="#M000004">generate_slug</a></li>
-              <li><a href="#M000005">new</a></li>
+              <li><a href="#M000006">new</a></li>
             </ol>
             <h3>public instance</h3>
             <ol>
-              <li><a href="#M000006">generate_slug</a></li>
-              <li><a href="#M000007">generate_slug?</a></li>
-              <li><a href="#M000008">slug_exists?</a></li>
+              <li><a href="#M000007">generate_slug</a></li>
+              <li><a href="#M000008">generate_slug?</a></li>
+              <li><a href="#M000009">slug_exists?</a></li>
             </ol>
           </div>
           <div id='section'>
+            <div id='constants-list'>
+              <h2>Constants</h2>
+              <div class='name-list'>
+                <table summary='Constants'>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>CHAR_ENCODING_TRANSLATION_TO</td>
+                    <td>=</td>
+                    <td class='context-item-value'>'ascii//ignore//translit'</td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>CHAR_ENCODING_TRANSLATION_FROM</td>
+                    <td>=</td>
+                    <td class='context-item-value'>'utf-8'</td>
+                  </tr>
+                  <tr class='top-aligned-row context-row'>
+                    <td class='context-item-name'>DEFAULT_SLUG_COLUMN</td>
+                    <td>=</td>
+                    <td class='context-item-value'>&quot;default&quot;</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
             <div id='methods'>
               <h2>Public class methods</h2>
-              <div class='public-class method' id='method-M000004'>
-                <a name='M000004'>      </a>
-                <div class='synopsis'>
-                  <span class='name'>generate_slug</span>
-                  <span class='arguments'>(obj)</span>
-                </div>
-                <div class='source'>
-                  <a class='source-toggle' href='#' onclick="toggleCode('M000004-source'); return false">
-                    [show source]
-                  </a>
-                  <pre id='M000004-source'>   <span class="ruby-comment cmt"># File lib/slugify/slug_generator.rb, line 3</span>&#x000A;3:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">generate_slug</span>(<span class="ruby-identifier">obj</span>)&#x000A;4:       <span class="ruby-identifier">new</span>(<span class="ruby-identifier">obj</span>).<span class="ruby-identifier">generate_slug</span>&#x000A;5:     <span class="ruby-keyword kw">end</span></pre>
-                </div>
-              </div>
               <div class='public-class method' id='method-M000005'>
                 <a name='M000005'>      </a>
                 <div class='synopsis'>
-                  <span class='name'>new</span>
+                  <span class='name'>generate</span>
                   <span class='arguments'>(obj)</span>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000005-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000005-source'>   <span class="ruby-comment cmt"># File lib/slugify/slug_generator.rb, line 7</span>&#x000A;7:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">obj</span>)&#x000A;8:       <span class="ruby-ivar">@obj</span> = <span class="ruby-identifier">obj</span>&#x000A;9:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000005-source'>    <span class="ruby-comment cmt"># File lib/slugify/slug_generator.rb, line 21</span>&#x000A;21:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">generate</span>(<span class="ruby-identifier">obj</span>)&#x000A;22:         <span class="ruby-identifier">new</span>(<span class="ruby-identifier">obj</span>).<span class="ruby-identifier">generate_slug</span>&#x000A;23:       <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
-              <h2>Public instance methods</h2>
-              <div class='public-instance method' id='method-M000006'>
-                <a name='M000006'>      </a>
+              <div class='public-class method' id='method-M000004'>
+                <a name='M000004'>      </a>
                 <div class='synopsis'>
                   <span class='name'>generate_slug</span>
-                  <span class='arguments'>()</span>
+                  <span class='arguments'>(str)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000004-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000004-source'>    <span class="ruby-comment cmt"># File lib/slugify/slug_generator.rb, line 8</span>&#x000A; 8:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">generate_slug</span>(<span class="ruby-identifier">str</span>)&#x000A; 9:         <span class="ruby-identifier">str</span> = <span class="ruby-constant">Iconv</span>.<span class="ruby-identifier">iconv</span>(<span class="ruby-constant">CHAR_ENCODING_TRANSLATION_TO</span>, <span class="ruby-constant">CHAR_ENCODING_TRANSLATION_FROM</span>, <span class="ruby-identifier">str</span>).<span class="ruby-identifier">to_s</span>&#x000A;10:         <span class="ruby-identifier">str</span>.<span class="ruby-identifier">downcase!</span>&#x000A;11:         &#x000A;12:         <span class="ruby-identifier">str</span>.<span class="ruby-identifier">gsub!</span> <span class="ruby-regexp re">/&lt;.*?&gt;/</span>,                       <span class="ruby-value str">''</span>   <span class="ruby-comment cmt"># strip HTML</span>&#x000A;13:         <span class="ruby-identifier">str</span>.<span class="ruby-identifier">gsub!</span> <span class="ruby-regexp re">/[\'\&quot;\#\$\,\.\!\?\%\@\(\)]+/</span>, <span class="ruby-value str">''</span>&#x000A;14:         <span class="ruby-identifier">str</span>.<span class="ruby-identifier">gsub!</span> <span class="ruby-regexp re">/\&amp;/</span>,                          <span class="ruby-value str">'and'</span>&#x000A;15:         <span class="ruby-identifier">str</span>.<span class="ruby-identifier">gsub!</span> <span class="ruby-regexp re">/\_/</span>,                          <span class="ruby-value str">'-'</span>&#x000A;16:         <span class="ruby-identifier">str</span>.<span class="ruby-identifier">gsub!</span> <span class="ruby-regexp re">/[\W^-_]+/</span>,                    <span class="ruby-value str">'-'</span>&#x000A;17:         <span class="ruby-identifier">str</span>.<span class="ruby-identifier">gsub!</span> <span class="ruby-regexp re">/(\-)+/</span>,                       <span class="ruby-value str">'-'</span>&#x000A;18:         <span class="ruby-identifier">str</span>&#x000A;19:       <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-class method' id='method-M000006'>
+                <a name='M000006'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>new</span>
+                  <span class='arguments'>(obj)</span>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000006-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000006-source'>    <span class="ruby-comment cmt"># File lib/slugify/slug_generator.rb, line 11</span>&#x000A;11:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">generate_slug</span>&#x000A;12:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">generate_slug?</span>&#x000A;13:         <span class="ruby-identifier">slug_value</span> = <span class="ruby-identifier">source_slug_value</span>&#x000A;14:    &#x000A;15:         <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">slug_value</span>.<span class="ruby-identifier">blank?</span>&#x000A;16:           <span class="ruby-identifier">set_unique_slug_value</span>(<span class="ruby-identifier">cleanup_slug</span>(<span class="ruby-identifier">slug_value</span>.<span class="ruby-identifier">dup</span>))&#x000A;17:         <span class="ruby-keyword kw">end</span>&#x000A;18:       <span class="ruby-keyword kw">end</span>&#x000A;19:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000006-source'>    <span class="ruby-comment cmt"># File lib/slugify/slug_generator.rb, line 26</span>&#x000A;26:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">obj</span>)&#x000A;27:       <span class="ruby-ivar">@obj</span> = <span class="ruby-identifier">obj</span>&#x000A;28:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
+              <h2>Public instance methods</h2>
               <div class='public-instance method' id='method-M000007'>
                 <a name='M000007'>      </a>
                 <div class='synopsis'>
-                  <span class='name'>generate_slug?</span>
+                  <span class='name'>generate_slug</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000007-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000007-source'>    <span class="ruby-comment cmt"># File lib/slugify/slug_generator.rb, line 21</span>&#x000A;21:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">generate_slug?</span>&#x000A;22:       <span class="ruby-operator">!</span><span class="ruby-identifier">slug_exists?</span> <span class="ruby-operator">&amp;&amp;</span>&#x000A;23:         <span class="ruby-identifier">slugify_proc</span>.<span class="ruby-identifier">call</span>(<span class="ruby-ivar">@obj</span>) <span class="ruby-operator">?</span> <span class="ruby-keyword kw">true</span> <span class="ruby-operator">:</span> <span class="ruby-keyword kw">false</span>&#x000A;24:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000007-source'>    <span class="ruby-comment cmt"># File lib/slugify/slug_generator.rb, line 30</span>&#x000A;30:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">generate_slug</span>&#x000A;31:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">generate_slug?</span>&#x000A;32:         <span class="ruby-identifier">slug_value</span> = <span class="ruby-identifier">source_slug_value</span>&#x000A;33:    &#x000A;34:         <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">slug_value</span>.<span class="ruby-identifier">blank?</span>&#x000A;35:           <span class="ruby-identifier">escaped_string</span> = <span class="ruby-identifier">cleanup_slug</span>(<span class="ruby-identifier">slug_value</span>.<span class="ruby-identifier">dup</span>)&#x000A;36:           &#x000A;37:           <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">escaped_string</span>.<span class="ruby-identifier">blank?</span>&#x000A;38:             <span class="ruby-identifier">set_unique_slug_value</span>(<span class="ruby-identifier">escaped_string</span>)&#x000A;39:           <span class="ruby-keyword kw">else</span>&#x000A;40:             <span class="ruby-identifier">set_unique_slug_value</span>(<span class="ruby-constant">DEFAULT_SLUG_COLUMN</span>)&#x000A;41:           <span class="ruby-keyword kw">end</span>&#x000A;42:         <span class="ruby-keyword kw">end</span>&#x000A;43:       <span class="ruby-keyword kw">end</span>&#x000A;44:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-instance method' id='method-M000008'>
                 <a name='M000008'>      </a>
                 <div class='synopsis'>
-                  <span class='name'>slug_exists?</span>
+                  <span class='name'>generate_slug?</span>
                   <span class='arguments'>()</span>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000008-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000008-source'>    <span class="ruby-comment cmt"># File lib/slugify/slug_generator.rb, line 26</span>&#x000A;26:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">slug_exists?</span>&#x000A;27:       <span class="ruby-operator">!</span><span class="ruby-identifier">slug</span>.<span class="ruby-identifier">blank?</span>&#x000A;28:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000008-source'>    <span class="ruby-comment cmt"># File lib/slugify/slug_generator.rb, line 46</span>&#x000A;46:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">generate_slug?</span>&#x000A;47:       <span class="ruby-identifier">slugify_proc</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">slugify_proc</span>.<span class="ruby-identifier">call</span>(<span class="ruby-ivar">@obj</span>) <span class="ruby-operator">?</span> <span class="ruby-keyword kw">true</span> <span class="ruby-operator">:</span> <span class="ruby-keyword kw">false</span>&#x000A;48:     <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000009'>
+                <a name='M000009'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>slug_exists?</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000009-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000009-source'>    <span class="ruby-comment cmt"># File lib/slugify/slug_generator.rb, line 50</span>&#x000A;50:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">slug_exists?</span>&#x000A;51:       <span class="ruby-operator">!</span><span class="ruby-identifier">slug</span>.<span class="ruby-identifier">blank?</span>&#x000A;52:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>
