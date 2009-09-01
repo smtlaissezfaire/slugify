@@ -2,6 +2,7 @@ require 'rubygems'
 require 'activerecord'
 
 require File.expand_path(File.dirname(__FILE__) + "/../lib/slugify")
+require File.expand_path(File.dirname(__FILE__) + "/fixtures")
 
 require 'sqlite3'
 
@@ -40,6 +41,10 @@ ActiveRecord::Schema.define do
   create_table :slug_with_procs do |t|
     t.string :title
     t.string :slug
+  end
+  
+  create_table :unused_slugify_classes do |t|
+    t.timestamps
   end
 end
 

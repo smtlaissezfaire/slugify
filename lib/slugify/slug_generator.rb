@@ -1,7 +1,26 @@
 module Slugify
   class SlugGenerator
-    def self.generate_slug(obj)
-      new(obj).generate_slug
+    CHAR_ENCODING_TRANSLATION_TO   = 'ascii//ignore//translit'
+    CHAR_ENCODING_TRANSLATION_FROM = 'utf-8'
+    DEFAULT_SLUG_COLUMN            = "default"
+    
+    class << self
+      def generate_slug(str)
+        str = Iconv.iconv(CHAR_ENCODING_TRANSLATION_TO, CHAR_ENCODING_TRANSLATION_FROM, str).to_s
+        str.downcase!
+        
+        str.gsub! /<.*?>/,                       ''   # strip HTML
+        str.gsub! /[\'\"\#\$\,\.\!\?\%\@\(\)]+/, ''
+        str.gsub! /\&/,                          'and'
+        str.gsub! /\_/,                          '-'
+        str.gsub! /[\W^-_]+/,                    '-'
+        str.gsub! /(\-)+/,                       '-'
+        str
+      end
+
+      def generate(obj)
+        new(obj).generate_slug
+      end
     end
 
     def initialize(obj)
@@ -13,14 +32,19 @@ module Slugify
         slug_value = source_slug_value
    
         if !slug_value.blank?
-          set_unique_slug_value(cleanup_slug(slug_value.dup))
+          escaped_string = cleanup_slug(slug_value.dup)
+          
+          if !escaped_string.blank?
+            set_unique_slug_value(escaped_string)
+          else
+            set_unique_slug_value(DEFAULT_SLUG_COLUMN)
+          end
         end
       end
     end
 
     def generate_slug?
-      !slug_exists? &&
-        slugify_proc.call(@obj) ? true : false
+      slugify_proc && slugify_proc.call(@obj) ? true : false
     end
 
     def slug_exists?
@@ -30,21 +54,23 @@ module Slugify
   private
 
     def build_conditions(slug_value)
-      conditions = { slug_column => slug_value }
+      sql_str, values = "#{slug_column} = ?", [slug_value]
+
       scopes.each do |column_name|
-        conditions[column_name] = scope_value(column_name)
+        sql_str << " AND #{column_name} = ?"
+        values  << scope_value(column_name)
       end
-      conditions
+
+      if @obj.id
+        sql_str << " AND id != ?"
+        values  << @obj.id
+      end
+
+      [sql_str, *values]
     end
 
-    def cleanup_slug(slug_value)
-      slug_value.downcase!
-      slug_value.gsub! /[\'\"\#\$\,\.\!\?\%\@\(\)]+/, ''
-      slug_value.gsub! /\&/,                          'and'
-      slug_value.gsub! /\_/,                          '-'
-      slug_value.gsub! /(\s+)|[\_]/,                  '-'
-      slug_value.gsub! /(\-)+/,                       '-'
-      slug_value
+    def cleanup_slug(str)
+      self.class.generate_slug(str)
     end
 
     def set_unique_slug_value(slug_value)

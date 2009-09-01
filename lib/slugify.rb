@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + "/slugify/slug_generator")
 
 module Slugify
   VERSION = Version::STRING
-
+  
   def self.included(other)
     other.extend ClassMethods
     other.class_eval do
@@ -14,6 +14,10 @@ module Slugify
 
   module ClassMethods
     def slugify(source_slug_column, options_given={})
+      options_given.symbolize_keys!
+      
+      options_given.assert_valid_keys(*default_slug_options.keys)
+      
       options = default_slug_options.merge(options_given)
       options[:scope] = [options[:scope]] unless options[:scope].respond_to?(:[])
       
@@ -41,7 +45,7 @@ module Slugify
 
   module InstanceMethods
     def generate_slug
-      Slugify::SlugGenerator.generate_slug(self)
+      Slugify::SlugGenerator.generate(self)
     end
   end
 end

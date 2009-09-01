@@ -7,13 +7,6 @@ describe Slugify do
     end
   end
 
-  class User < ActiveRecord::Base
-    include Slugify
-
-    validates_presence_of :name
-    slugify :name
-  end
-
   def new_user(attributes = {})
     User.new(attributes)
   end
@@ -37,22 +30,10 @@ describe Slugify do
       u.slug.should == "bar"
     end
 
-    class Page < ActiveRecord::Base
-      include Slugify
-
-      slugify :title
-    end
-
     it "should allow a different name" do
       p = Page.new(:title => "foo")
       p.generate_slug
       p.slug.should == "foo"
-    end
-
-    class SlugColumn < ActiveRecord::Base
-      include Slugify
-
-      slugify :foo, :slug_column => "url_slug"
     end
 
     it "should allow a different slug column" do
@@ -129,6 +110,12 @@ describe Slugify do
       u.generate_slug
       u.slug.should == "one-two"
     end
+    
+    it "should replace a '/' with a dash" do
+      u = new_user(:name => "one/two")
+      u.generate_slug
+      u.slug.should == "one-two"
+    end
   end
 
   it "should not generate a slug if the source column is nil" do
@@ -141,13 +128,28 @@ describe Slugify do
     u = new_user(:name => "")
     u.generate_slug.should be_nil
   end
+  
+  it "should generate a slug when the source column is not empty, but has only escaped chars" do
+    u = new_user(:name => "...")
+    u.generate_slug
+    u.slug.should == "default"
+  end
+  
+  it "should generate a slug when the source column is not empty, but has only escaped chars" do
+    create_user(:name => "...")
+    
+    u = new_user(:name => "...")
+    u.generate_slug
+    u.slug.should == "default-0"
+  end
+  
 
   describe "generating the slug when one already exists" do
     it "should create a slug with -0 appended on to it" do
       create_user(:name => "Scott Taylor")
       create_user(:name => "Scott Taylor").slug.should == "scott-taylor-0"
     end
-
+    
     it "should create a slug with -1 appended to it when it is the third slug" do
       create_user(:name => "Scott Taylor")
       create_user(:name => "Scott Taylor")
@@ -156,11 +158,6 @@ describe Slugify do
   end
 
   describe "scopes" do
-    class Scope < ActiveRecord::Base
-      include Slugify
-      slugify :title, :scope => :some_id
-    end
-
     def create_scope(attrs={})
       s = Scope.new(attrs)
       s.save!
@@ -185,11 +182,6 @@ describe Slugify do
   end
 
   describe "scoped by two columns" do
-    class MultiScope < ActiveRecord::Base
-      include Slugify
-      slugify :title, :scope => [:scope_one, :scope_two]
-    end
-
     def create_scope(attrs={})
       s = MultiScope.new(attrs)
       s.save!
@@ -227,24 +219,7 @@ describe Slugify do
       u.valid?
     end
 
-    it "should not regenerate the slug on update" do
-      u = create_user(:name => "scott")
-      u.save!
-      u.name = "foo"
-      u.save!
-
-      u.slug.should == "scott"
-    end
-
     describe "with a :when lambda" do
-      class SlugWithProc < ActiveRecord::Base
-        include Slugify
-
-        slugify :title, :when => lambda { |obj| obj.a_value }
-   
-        attr_accessor :a_value
-      end
-   
       it "should allow slug generation when the proc is true" do
         s = SlugWithProc.new(:title => "foo")
         s.a_value = true
@@ -277,33 +252,87 @@ describe Slugify do
         s.slug.should be_nil
       end
     end
-
+    
     describe "rerunning slug generation" do
-      it "should not regenerate the slug if the slug already exists" do
-        u = User.new(:slug => "foo", :name => "foo")
+      it "should not regenerate the slug on update (by default)" do
+        u = create_user(:name => "scott")
+        u.save!
+        u.name = "foo"
+        u.save!
+
+        u.slug.should == "scott"
+      end
+      
+      it "should regenerate the slug if the :when proc specifies it" do
+        obj = SlugWithProc.new(:title => "foo")
+        obj.a_value = true
+        obj.save!
         
-        u.name = "Bar"
-        u.generate_slug
-        
-        u.slug.should == "foo"
+        obj.title = "bar"
+        obj.save!
+        obj.slug.should == "bar"
       end
 
-      it "should regenerate the slug if the slug is nil" do
-        u = User.new(:slug => nil, :name => "foo")
+      it "should only compare against other table entries when regenerating a slug" do
+        obj = SlugWithProc.new(:title => "foo")
+        obj.a_value = true
+        obj.save!
 
-        u.name = "Bar"
-        u.generate_slug
-        
-        u.slug.should == "bar"
+        obj.save!
+        obj.slug.should == "foo"
       end
+    end
 
-      it "should regenerate the slug if the slug is the empty string" do
-        u = User.new(:slug => "", :name => "foo")
-        
-        u.name = "bar"
+    describe "html escaping" do
+      before do
+        @u = User.new
+      end
+      
+      it "should strip html" do
+        @u.name = "<i>the silence before bach</i>"
+        @u.generate_slug
+        @u.slug.should == "the-silence-before-bach"
+      end
+      
+      it "should strip recursively, but keep text inside the tags" do
+        @u.name = "<one>foo<two>bar</two></one>"
+        @u.generate_slug
+        @u.slug.should == "foobar"
+      end
+    end
+
+    describe "utf8-chars" do
+      it "should replace them" do
+        u = User.new(:name => "cinqüenta")
         u.generate_slug
+        u.slug.should == "cinquenta"
+      end
+    end
+    
+    describe "passing invalid options" do
+      it "should raise an error, displaying the valid keys" do
+        lambda {
+          Class.new do
+            def self.before_save(*args); end
+            
+            include Slugify
+            slugify :foo, :source_column => :bar
+          end
+        }.should raise_error(ArgumentError, "Unknown key(s): source_column")
+      end
+      
+      it "should symbolize keys" do
+        obj = Class.new do
+          def self.before_save(*args); end
+            include Slugify
+
+            slugify "col", "slug_column" => "foo", "scope" => "bar", "when" => "baz"
+        end
         
-        u.slug.should == "bar"
+        obj.source_slug_column.should == "col"
+        obj.slug_column.should == "foo"
+        obj.slug_scope.should == "bar"
+        obj.slugify_when.should == "baz"
       end
     end
   end
