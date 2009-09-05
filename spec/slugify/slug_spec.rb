@@ -117,6 +117,19 @@ describe Slugify do
       u.slug.should == "one-two"
     end
   end
+  
+  describe "regenerating a slug after it has already been generated" do
+    it "should regenerate the slug" do
+      u = new_user(:name => "Scott Taylor")
+      u.generate_slug
+      u.save!
+      
+      u.name = "David Chelimsky"
+      u.regenerate_slug
+      
+      u.slug.should == "david-chelimsky"
+    end
+  end
 
   it "should not generate a slug if the source column is nil" do
     u = new_user(:name => nil)
