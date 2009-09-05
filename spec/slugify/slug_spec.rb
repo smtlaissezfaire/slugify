@@ -142,7 +142,6 @@ describe Slugify do
     u.generate_slug
     u.slug.should == "default-0"
   end
-  
 
   describe "generating the slug when one already exists" do
     it "should create a slug with -0 appended on to it" do
