@@ -21,6 +21,10 @@ module Slugify
       def generate(obj)
         new(obj).generate_slug
       end
+      
+      def regenerate(obj)
+        new(obj).regenerate_slug
+      end
     end
 
     def initialize(obj)
@@ -28,17 +32,23 @@ module Slugify
     end
 
     def generate_slug
-      if generate_slug?
-        slug_value = source_slug_value
-   
-        if !slug_value.blank?
-          escaped_string = cleanup_slug(slug_value.dup)
-          
-          if !escaped_string.blank?
-            set_unique_slug_value(escaped_string)
-          else
-            set_unique_slug_value(DEFAULT_SLUG_COLUMN)
-          end
+      generate_slug_without_checking_proc if generate_slug?
+    end
+    
+    def regenerate_slug
+      generate_slug_without_checking_proc
+    end
+    
+    def generate_slug_without_checking_proc
+      slug_value = source_slug_value
+ 
+      if !slug_value.blank?
+        escaped_string = cleanup_slug(slug_value.dup)
+        
+        if !escaped_string.blank?
+          set_unique_slug_value(escaped_string)
+        else
+          set_unique_slug_value(DEFAULT_SLUG_COLUMN)
         end
       end
     end

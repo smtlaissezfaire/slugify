@@ -47,5 +47,9 @@ module Slugify
     def generate_slug
       Slugify::SlugGenerator.generate(self)
     end
+    
+    def regenerate_slug
+      Slugify::SlugGenerator.regenerate(self)
+    end
   end
 end
