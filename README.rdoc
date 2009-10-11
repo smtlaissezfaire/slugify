@@ -31,3 +31,7 @@ Generate slugs for your models
 === Slug generation other than at creation time:
 
   slugify :my_column, :when => lambda { |my_record| my_record.published? }
+  
+== Contributors
+
+  kule - STI Issues [Github Issue #1]
