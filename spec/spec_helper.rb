@@ -46,6 +46,12 @@ ActiveRecord::Schema.define do
   create_table :unused_slugify_classes do |t|
     t.timestamps
   end
+  
+  create_table :base_classes do |t|
+    t.string :title
+    t.string :slug
+    t.timestamps
+  end
 end
 
 Spec::Runner.configure do |config|
@@ -60,5 +66,7 @@ Spec::Runner.configure do |config|
     Scope.delete_all
     MultiScope.delete_all
     SlugWithProc.delete_all
+    BaseClass.delete_all
+    SubClass.delete_all
   end
 end

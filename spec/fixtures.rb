@@ -39,3 +39,11 @@ class UnusedSlugifyClass < ActiveRecord::Base
   include Slugify
 end
 
+class BaseClass < ActiveRecord::Base
+  include Slugify
+  slugify :title
+end
+
+class SubClass < BaseClass
+end
+
