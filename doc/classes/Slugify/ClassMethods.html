@@ -46,33 +46,6 @@
             </ol>
           </div>
           <div id='section'>
-            <div id='attribute-list'>
-              <h2 class='section-bar'>Attributes</h2>
-              <div class='name-list'>
-                <table>
-                  <tr class='top-aligned-row context-row'>
-                    <td class='context-item-name'>slug_column</td>
-                    <td class='context-item-value'>[R]</td>
-                    <td class='context-item-desc'></td>
-                  </tr>
-                  <tr class='top-aligned-row context-row'>
-                    <td class='context-item-name'>slug_scope</td>
-                    <td class='context-item-value'>[R]</td>
-                    <td class='context-item-desc'></td>
-                  </tr>
-                  <tr class='top-aligned-row context-row'>
-                    <td class='context-item-name'>slugify_when</td>
-                    <td class='context-item-value'>[R]</td>
-                    <td class='context-item-desc'></td>
-                  </tr>
-                  <tr class='top-aligned-row context-row'>
-                    <td class='context-item-name'>source_slug_column</td>
-                    <td class='context-item-value'>[R]</td>
-                    <td class='context-item-desc'></td>
-                  </tr>
-                </table>
-              </div>
-            </div>
             <div id='methods'>
               <h2>Public instance methods</h2>
               <div class='public-instance method' id='method-M000002'>
@@ -85,7 +58,7 @@
                   <a class='source-toggle' href='#' onclick="toggleCode('M000002-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000002-source'>    <span class="ruby-comment cmt"># File lib/slugify.rb, line 16</span>&#x000A;16:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">slugify</span>(<span class="ruby-identifier">source_slug_column</span>, <span class="ruby-identifier">options_given</span>={})&#x000A;17:       <span class="ruby-identifier">options_given</span>.<span class="ruby-identifier">symbolize_keys!</span>&#x000A;18:       &#x000A;19:       <span class="ruby-identifier">options_given</span>.<span class="ruby-identifier">assert_valid_keys</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">default_slug_options</span>.<span class="ruby-identifier">keys</span>)&#x000A;20:       &#x000A;21:       <span class="ruby-identifier">options</span> = <span class="ruby-identifier">default_slug_options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">options_given</span>)&#x000A;22:       <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:scope</span>] = [<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:scope</span>]] <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:scope</span>].<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:[]</span>)&#x000A;23:       &#x000A;24:       <span class="ruby-ivar">@source_slug_column</span> = <span class="ruby-identifier">source_slug_column</span>&#x000A;25:       <span class="ruby-ivar">@slug_column</span>        = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:slug_column</span>]&#x000A;26:       <span class="ruby-ivar">@slug_scope</span>         = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:scope</span>]&#x000A;27:       <span class="ruby-ivar">@slugify_when</span>       = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:when</span>]&#x000A;28:     <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000002-source'>    <span class="ruby-comment cmt"># File lib/slugify.rb, line 15</span>&#x000A;15:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">slugify</span>(<span class="ruby-identifier">source_slug_column</span>, <span class="ruby-identifier">options_given</span>={})&#x000A;16:       <span class="ruby-identifier">before_save</span> <span class="ruby-identifier">:generate_slug</span>&#x000A;17: &#x000A;18:       <span class="ruby-identifier">options_given</span>.<span class="ruby-identifier">symbolize_keys!</span>&#x000A;19:       &#x000A;20:       <span class="ruby-identifier">options_given</span>.<span class="ruby-identifier">assert_valid_keys</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">default_slug_options</span>.<span class="ruby-identifier">keys</span>)&#x000A;21:       &#x000A;22:       <span class="ruby-identifier">options</span> = <span class="ruby-identifier">default_slug_options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">options_given</span>)&#x000A;23:       <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:scope</span>] = [<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:scope</span>]] <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:scope</span>].<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:[]</span>)&#x000A;24: &#x000A;25:       <span class="ruby-identifier">class_inheritable_accessor</span> <span class="ruby-identifier">:source_slug_column</span>&#x000A;26:       <span class="ruby-identifier">class_inheritable_accessor</span> <span class="ruby-identifier">:slug_column</span>&#x000A;27:       <span class="ruby-identifier">class_inheritable_accessor</span> <span class="ruby-identifier">:slug_scope</span>&#x000A;28:       <span class="ruby-identifier">class_inheritable_accessor</span> <span class="ruby-identifier">:slugify_when</span>&#x000A;29:       &#x000A;30:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">source_slug_column</span> = <span class="ruby-identifier">source_slug_column</span>&#x000A;31:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">slug_column</span>        = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:slug_column</span>]&#x000A;32:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">slug_scope</span>         = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:scope</span>]&#x000A;33:       <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">slugify_when</span>       = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:when</span>]&#x000A;34:     <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>
