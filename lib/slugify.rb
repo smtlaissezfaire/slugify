@@ -7,31 +7,32 @@ module Slugify
   def self.included(other)
     other.extend ClassMethods
     other.class_eval do
-      before_save :generate_slug
       include InstanceMethods
     end
   end
 
   module ClassMethods
     def slugify(source_slug_column, options_given={})
+      before_save :generate_slug
+
       options_given.symbolize_keys!
       
       options_given.assert_valid_keys(*default_slug_options.keys)
       
       options = default_slug_options.merge(options_given)
       options[:scope] = [options[:scope]] unless options[:scope].respond_to?(:[])
+
+      class_inheritable_accessor :source_slug_column
+      class_inheritable_accessor :slug_column
+      class_inheritable_accessor :slug_scope
+      class_inheritable_accessor :slugify_when
       
-      @source_slug_column = source_slug_column
-      @slug_column        = options[:slug_column]
-      @slug_scope         = options[:scope]
-      @slugify_when       = options[:when]
+      self.source_slug_column = source_slug_column
+      self.slug_column        = options[:slug_column]
+      self.slug_scope         = options[:scope]
+      self.slugify_when       = options[:when]
     end
-    
-    attr_reader :source_slug_column
-    attr_reader :slug_column
-    attr_reader :slug_scope
-    attr_reader :slugify_when
-    
+
   private
     
     def default_slug_options
