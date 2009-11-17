@@ -32,7 +32,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>Sun Oct 11 12:06:00 -0400 2009</span>
+          <span class='datetime'>Mon Nov 16 21:50:34 -0500 2009</span>
         </div>
       </div>
       <div id='content'>
@@ -42,13 +42,25 @@
             <p>
             Generate slugs for your models
             </p>
+            <h2>Installation</h2>
+            <p>
+            Throw it in vendor/plugins (with script/plugin install, braid, submodules,
+            or whatever your preferred installation method), and add the following to a
+            model you&#8217;d like to slug:
+            </p>
+            <pre>class MyClass &lt; ActiveRecord::Base&#x000A;  include Slugify&#x000A;  slugify :title&#x000A;end</pre>
+            <p>
+            If you are using slugify in multiple models, you may want to mix it into
+            ActiveRecord::Base:
+            </p>
+            <pre>ActiveRecord::Base.instance_eval do&#x000A;  include Slugify&#x000A;end&#x000A;&#x000A;class MyClass &lt; ActiveRecord::Base&#x000A;  slugify :title&#x000A;end</pre>
             <h2>Examples</h2>
             <pre>class Page &lt; ActiveRecord::Base&#x000A;  include Slugify&#x000A;&#x000A;  validates_presence_of :title&#x000A;&#x000A;  slugify :title&#x000A;end&#x000A;&#x000A;Page.create(:title =&gt; &quot;Foo&quot;)&#x000A;# =&gt; #&lt;Page id: 1, title: &quot;Foo&quot;, slug: &quot;foo&quot;&gt;&#x000A;&#x000A;Page.create(:title =&gt; &quot;Foo&quot;)&#x000A;# =&gt; #&lt;Page id: 1, title: &quot;Foo&quot;, slug: &quot;foo-0&quot;&gt;</pre>
             <h3>Using a different slug column</h3>
             <pre>slugify :my_column, :slug_column =&gt; :bar</pre>
             <h3>Scoping:</h3>
             <pre>slugify :slug_column, :scope =&gt; :col_one&#x000A;slugify :slug_column, :scope =&gt; [:col_one, :col_two]</pre>
-            <h3>Slug generation other than at creation time:</h3>
+            <h3>Conditional slug generation:</h3>
             <pre>slugify :my_column, :when =&gt; lambda { |my_record| my_record.published? }</pre>
             <h2>Contributors</h2>
             <pre>kule - STI Issues [Github Issue #1]</pre>
