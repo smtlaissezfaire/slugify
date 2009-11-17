@@ -3,13 +3,32 @@
 
 Generate slugs for your models
 
+== Installation
+
+Throw it in vendor/plugins (with script/plugin install, braid, submodules, or whatever your preferred installation method), and add the following to a model you'd like to slug:
+
+  class MyClass < ActiveRecord::Base
+    include Slugify
+    slugify :title
+  end
+
+If you are using slugify in multiple models, you may want to mix it into ActiveRecord::Base:
+
+  ActiveRecord::Base.instance_eval do
+    include Slugify
+  end
+
+  class MyClass < ActiveRecord::Base
+    slugify :title
+  end
+
 == Examples
 
   class Page < ActiveRecord::Base
     include Slugify
 
     validates_presence_of :title
-    
+
     slugify :title
   end
 
@@ -31,7 +50,7 @@ Generate slugs for your models
 === Conditional slug generation:
 
   slugify :my_column, :when => lambda { |my_record| my_record.published? }
-  
+
 == Contributors
 
   kule - STI Issues [Github Issue #1]
