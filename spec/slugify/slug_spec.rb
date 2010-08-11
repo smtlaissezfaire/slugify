@@ -53,6 +53,15 @@ describe Slugify do
     end
   end
 
+  describe "to_param" do
+    it "should return the slug" do
+      u = new_user(:name => "foo")
+      u.generate_slug
+
+      u.to_param.should == "foo"
+    end
+  end
+
   describe "slug escaping" do
     it "should replace uppercase with lowercase" do
       u = new_user(:name => "Scott")

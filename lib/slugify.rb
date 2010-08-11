@@ -6,9 +6,6 @@ module Slugify
 
   def self.append_features(other)
     other.extend ClassMethods
-    other.class_eval do
-      include InstanceMethods
-    end
   end
 
   module ClassMethods
@@ -31,6 +28,8 @@ module Slugify
       self.slug_column        = options[:slug_column]
       self.slug_scope         = options[:scope]
       self.slugify_when       = options[:when]
+
+      include InstanceMethods
     end
 
   private
@@ -51,6 +50,10 @@ module Slugify
 
     def regenerate_slug
       Slugify::SlugGenerator.regenerate(self)
+    end
+
+    def to_param
+      read_attribute(self.class.slug_column)
     end
   end
 end
