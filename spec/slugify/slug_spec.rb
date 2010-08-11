@@ -5,6 +5,16 @@ describe Slugify do
     it "should not automatically mix in the module" do
       ActiveRecord::Base.included_modules.should_not include(Slugify)
     end
+
+    class TempClass
+      include Slugify
+    end
+
+    it "should not mix in a Version module (for name conflicts with paper_trail)" do
+      lambda {
+        TempClass::Version
+      }.should raise_error(NameError)
+    end
   end
 
   def new_user(attributes = {})
@@ -40,6 +50,15 @@ describe Slugify do
       s = SlugColumn.new(:foo => "bar")
       s.generate_slug
       s.url_slug.should == "bar"
+    end
+  end
+
+  describe "to_param" do
+    it "should return the slug" do
+      u = new_user(:name => "foo")
+      u.generate_slug
+
+      u.to_param.should == "foo"
     end
   end
 
@@ -110,23 +129,23 @@ describe Slugify do
       u.generate_slug
       u.slug.should == "one-two"
     end
-    
+
     it "should replace a '/' with a dash" do
       u = new_user(:name => "one/two")
       u.generate_slug
       u.slug.should == "one-two"
     end
   end
-  
+
   describe "regenerating a slug after it has already been generated" do
     it "should regenerate the slug" do
       u = new_user(:name => "Scott Taylor")
       u.generate_slug
       u.save!
-      
+
       u.name = "David Chelimsky"
       u.regenerate_slug
-      
+
       u.slug.should == "david-chelimsky"
     end
   end
@@ -141,16 +160,16 @@ describe Slugify do
     u = new_user(:name => "")
     u.generate_slug.should be_nil
   end
-  
+
   it "should generate a slug when the source column is not empty, but has only escaped chars" do
     u = new_user(:name => "...")
     u.generate_slug
     u.slug.should == "default"
   end
-  
+
   it "should generate a slug when the source column is not empty, but has only escaped chars" do
     create_user(:name => "...")
-    
+
     u = new_user(:name => "...")
     u.generate_slug
     u.slug.should == "default-0"
@@ -161,7 +180,7 @@ describe Slugify do
       create_user(:name => "Scott Taylor")
       create_user(:name => "Scott Taylor").slug.should == "scott-taylor-0"
     end
-    
+
     it "should create a slug with -1 appended to it when it is the third slug" do
       create_user(:name => "Scott Taylor")
       create_user(:name => "Scott Taylor")
@@ -187,7 +206,7 @@ describe Slugify do
     it "should allow a slug to be scoped (so that the same slug can be used in different contexts" do
       first  = create_scope(:title => "one", :some_id => 1)
       second = create_scope(:title => "one", :some_id => 2)
-      
+
       first.slug.should == "one"
       second.slug.should == "one"
     end
@@ -203,7 +222,7 @@ describe Slugify do
     it "show generate a unique identifier in the same scopes" do
       first  = create_scope(:title => "one", :scope_one => 1, :scope_two => 1)
       second = create_scope(:title => "one", :scope_one => 1, :scope_two => 1)
-      
+
       first.slug.should == "one"
       second.slug.should == "one-0"
     end
@@ -264,7 +283,7 @@ describe Slugify do
         s.slug.should be_nil
       end
     end
-    
+
     describe "rerunning slug generation" do
       it "should not regenerate the slug on update (by default)" do
         u = create_user(:name => "scott")
@@ -274,12 +293,12 @@ describe Slugify do
 
         u.slug.should == "scott"
       end
-      
+
       it "should regenerate the slug if the :when proc specifies it" do
         obj = SlugWithProc.new(:title => "foo")
         obj.a_value = true
         obj.save!
-        
+
         obj.title = "bar"
         obj.save!
         obj.slug.should == "bar"
@@ -299,13 +318,13 @@ describe Slugify do
       before do
         @u = User.new
       end
-      
+
       it "should strip html" do
         @u.name = "<i>the silence before bach</i>"
         @u.generate_slug
         @u.slug.should == "the-silence-before-bach"
       end
-      
+
       it "should strip recursively, but keep text inside the tags" do
         @u.name = "<one>foo<two>bar</two></one>"
         @u.generate_slug
@@ -320,13 +339,13 @@ describe Slugify do
         u.slug.should == "cinquenta"
       end
     end
-    
+
     describe "passing invalid options" do
       it "should raise an error, displaying the valid keys" do
         lambda {
           Class.new do
             def self.before_save(*args); end
-            
+
             include Slugify
             slugify :foo, :source_column => :bar
           end
@@ -338,7 +357,7 @@ describe Slugify do
       obj = Class.new do
         def self.before_save(*args)
         end
-        
+
         include Slugify
       end
 
