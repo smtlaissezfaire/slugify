@@ -6,7 +6,7 @@ module Slugify
     
     class << self
       def generate_slug(str)
-        str = Iconv.iconv(CHAR_ENCODING_TRANSLATION_TO, CHAR_ENCODING_TRANSLATION_FROM, str).to_s
+        str = Iconv.iconv(CHAR_ENCODING_TRANSLATION_TO, CHAR_ENCODING_TRANSLATION_FROM, str).join
         str.downcase!
         
         str.gsub! /<.*?>/,                       ''   # strip HTML
