@@ -3,7 +3,14 @@
 
 Generate slugs for your models
 
-== Installation
+== Install as a rails plugin or or as a gem
+
+...then add the following to a model you'd like to slug:
+
+  class MyClass < ActiveRecord::Base
+    include Slugify
+    slugify :title
+  end
 
 Throw it in vendor/plugins (with script/plugin install, braid, submodules, or whatever your preferred installation method), and add the following to a model you'd like to slug:
 
