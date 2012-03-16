@@ -1,9 +1,9 @@
 require 'rake'
-require 'hanna/rdoctask'
+require 'rdoc/task'
 
 DOC_DIRECTORY = File.dirname(__FILE__) + "/../doc"
 
-Rake::RDocTask.new do |rdoc|
+RDoc::Task.new do |rdoc|
   rdoc.rdoc_dir = DOC_DIRECTORY
   rdoc.title    = 'slugify'
   rdoc.options << '--line-numbers' << '--inline-source'

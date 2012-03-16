@@ -1,3 +1,4 @@
+require 'bundler'
 
 Dir.glob(File.dirname(__FILE__) + "/rakefiles/**/**").each do |file|
   load file

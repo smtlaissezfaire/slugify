@@ -1,21 +1,14 @@
-require 'spec/rake/spectask'
-require 'spec/rake/verify_rcov'
+require 'rspec/core/rake_task'
 
 desc 'Run the specs'
-Spec::Rake::SpecTask.new do |t|
-  t.warning = false
-  t.spec_opts = ["--color"]
+RSpec::Core::RakeTask.new do |t|
+  t.rspec_opts = ['--backtrace --color']
+  t.pattern = 'spec/slugify/*_spec.rb'
 end
 
-desc "Create the html specdoc"
-Spec::Rake::SpecTask.new(:specdoc) do |t|
-  t.spec_opts = ["--format", "html:doc/specdoc.html"]
-end
-
-desc "Run all examples with RCov"
-Spec::Rake::SpecTask.new(:rcov) do |t|
+desc "Generate code coverage"
+RSpec::Core::RakeTask.new(:rcov) do |t|
   t.rcov = true
   t.rcov_opts = ['--exclude', 'spec']
-  t.rcov_dir = "doc/rcov"
 end
 
