@@ -1,7 +1,10 @@
-$spec = Gem::Specification.new do |s|
+$:.push File.expand_path("../lib", __FILE__)  
+require "slugify/version"
+
+Gem::Specification.new do |s|
   s.name        = "slugify"
   s.description = "Generate slugs for your ActiveRecord models"
-  s.version     = Slugify::Version
+  s.version     = Slugify::VERSION
   s.summary     = "Generate slugs for your models"
 
   s.authors   = ['Scott Taylor', 'Stephen Schor']
@@ -12,5 +15,5 @@ $spec = Gem::Specification.new do |s|
   
   s.rubyforge_project = 'nowarning'
   
-  s.add_dependency              'iconv', '>= 0.1'
+  s.add_dependency 'iconv', '>= 0.1'
 end

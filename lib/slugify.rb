@@ -1,9 +1,6 @@
-require File.expand_path(File.dirname(__FILE__) + "/slugify/version")
 require File.expand_path(File.dirname(__FILE__) + "/slugify/slug_generator")
 
 module Slugify
-  VERSION = Version::STRING
-
   def self.append_features(other)
     other.extend ClassMethods
   end
