@@ -1,10 +1,8 @@
-require 'rubygems'
-require 'activerecord'
+require 'rspec'
+require 'active_record'
 
 require File.expand_path(File.dirname(__FILE__) + "/../lib/slugify")
 require File.expand_path(File.dirname(__FILE__) + "/fixtures")
-
-require 'sqlite3'
 
 ActiveRecord::Base.establish_connection :adapter => 'sqlite3', :database  => ':memory:'
 ActiveRecord::Migration.verbose = false
@@ -54,7 +52,7 @@ ActiveRecord::Schema.define do
   end
 end
 
-Spec::Runner.configure do |config|
+RSpec.configure do |config|
   config.before :each do
     cleanup_db
   end

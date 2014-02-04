@@ -1,9 +1,3 @@
 module Slugify
-  module Version
-    MAJOR = 0
-    MINOR = 1
-    TINY  = 4
-
-    STRING = "#{MAJOR}.#{MINOR}.#{TINY}"
-  end
+  VERSION = "0.1.4"
 end

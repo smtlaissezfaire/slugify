@@ -1,9 +1,6 @@
-require File.expand_path(File.dirname(__FILE__) + "/slugify/version")
 require File.expand_path(File.dirname(__FILE__) + "/slugify/slug_generator")
 
 module Slugify
-  VERSION = Version::STRING
-
   def self.append_features(other)
     other.extend ClassMethods
   end
@@ -19,10 +16,10 @@ module Slugify
       options = default_slug_options.merge(options_given)
       options[:scope] = [options[:scope]] unless options[:scope].respond_to?(:[])
 
-      class_inheritable_accessor :source_slug_column
-      class_inheritable_accessor :slug_column
-      class_inheritable_accessor :slug_scope
-      class_inheritable_accessor :slugify_when
+      class_attribute :source_slug_column
+      class_attribute :slug_column
+      class_attribute :slug_scope
+      class_attribute :slugify_when
 
       self.source_slug_column = source_slug_column
       self.slug_column        = options[:slug_column]

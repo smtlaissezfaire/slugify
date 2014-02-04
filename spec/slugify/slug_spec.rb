@@ -349,7 +349,7 @@ describe Slugify do
             include Slugify
             slugify :foo, :source_column => :bar
           end
-        }.should raise_error(ArgumentError, "Unknown key(s): source_column")
+        }.should raise_error(ArgumentError, "Unknown key: source_column")
       end
     end
 
